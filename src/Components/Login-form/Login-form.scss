@@ -1,0 +1,40 @@
+.login-form {
+  display: flex;
+  flex-direction: column;
+
+  background: rgba(0, 0, 0, 0.8);
+  padding: 6rem 4rem;
+  width: 22rem;
+  border-radius: 15px;
+
+  & h1{
+    color: white;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  & input {
+    flex: 1;
+    padding: 1rem 15px;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    background-color: #414141;
+    border: none;
+    border-radius: 5px;
+
+    &::placeholder {
+    color:rgb(160, 160, 160);
+      
+    }
+  }
+
+  & button {
+    background: rgb(229, 9, 20);
+    border: none;
+    font-weight: bold;
+    color: white;
+    padding: 1rem;
+    border-radius: 5px;
+    margin-top: 2rem;
+  }
+}
