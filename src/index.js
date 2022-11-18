@@ -1,9 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { Provider } from 'react-redux';
-import { store } from './Redux/store';
 import { BrowserRouter } from 'react-router-dom';
-import {UserContext} from './Context/UserContext';
+import { UserProvider } from './Context/UserContext';
 
 import App from './app/App';
 import reportWebVitals from './reportWebVitals';
@@ -14,11 +12,9 @@ const root = createRoot(container);
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <UserContext.Provider >
-        <Provider store={store}>
-          <App />
-        </Provider>
-      </UserContext.Provider>
+      <UserProvider>
+        <App />
+      </UserProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

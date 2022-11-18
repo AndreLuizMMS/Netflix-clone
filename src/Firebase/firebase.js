@@ -5,6 +5,8 @@ import {
   signInWithEmailAndPassword
 } from 'firebase/auth';
 
+import {} from 'firebase/firestore' 
+
 const firebaseConfig = {
   apiKey: 'AIzaSyCKLPgXo1IDFbMy8KOroRG-ERGQ8emC6yw',
   authDomain: 'netflix-clone-6b4e8.firebaseapp.com',

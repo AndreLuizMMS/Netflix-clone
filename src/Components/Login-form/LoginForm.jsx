@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Navigate, Link } from 'react-router-dom';
 import { auth, loginExistentUser } from '../../Firebase/firebase';
+
+import { UserContext } from '../../Context/UserContext';
 
 //Style
 import './Login-form.scss';
@@ -12,10 +14,18 @@ const LoginForm = () => {
   const [formField, setForm] = useState(defaultFormField);
   const { email, password } = formField;
 
-  const handlesubmit = e => {
+  const { setCurrentUser } = useContext(UserContext);
+
+  const handlesubmit = async e => {
     e.preventDefault();
     const { email, password } = formField;
-    loginExistentUser(auth, email, password);
+
+    try {
+      const { user } = await loginExistentUser(email, password);
+      setCurrentUser(user); 
+    } catch (err) {
+      console.log(err, 'caiu no catch');
+    }
   };
   const handleChange = e => {
     e.preventDefault();
@@ -25,33 +35,30 @@ const LoginForm = () => {
   };
   return (
     <div className="login-container">
-      {true ? (
-        <>
-          <form onSubmit={handlesubmit} className="login-form">
-            <h1>Entrar</h1>
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={email}
-              onChange={handleChange}
-            />
-            <input
-              type="password"
-              name="password"
-              placeholder="senha"
-              value={password}
-              onChange={handleChange}
-            />
-            <button className="login-btn">Entrar</button>
-            <p>
-              Novo por aqui? <Link to="/sign-in">Assine agora.</Link>
-            </p>
-          </form>
-        </>
-      ) : (
-        <Navigate to="/home" />
-      )}
+      (
+      <>
+        <form onSubmit={handlesubmit} className="login-form">
+          <h1>Entrar</h1>
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={email}
+            onChange={handleChange}
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="senha"
+            value={password}
+            onChange={handleChange}
+          />
+          <button className="login-btn">Entrar</button>
+          <p>
+            Novo por aqui? <Link to="/sign-in">Assine agora.</Link>
+          </p>
+        </form>
+      </>
     </div>
   );
 };

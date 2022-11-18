@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
+
+import { UserContext } from '../../Context/UserContext';
 
 import { createUser } from '../../Firebase/firebase';
 
@@ -18,8 +20,11 @@ const SignInForm = () => {
   const { name, lastName, email, password, confirmPassword } = formFileds;
 
   const [error, setError] = useState('');
-  const [created, setCreated] = useState('')
+  const [created, setCreated] = useState('');
 
+  const { setCurrentUser } = useContext(UserContext);
+
+  // Functions
   const clearForm = () => {
     setFormFields(defaultFormFields);
   };
@@ -39,21 +44,20 @@ const SignInForm = () => {
     }
     try {
       const { user } = await createUser(email, password);
-      console.log(user);
+      setCurrentUser(user);
       setError('');
       clearForm();
-      setCreated('Usuário criado com sucesso')
-
+      setCreated('Usuário criado com sucesso !');
     } catch (err) {
       console.log(err, 'caiu no catch ');
     }
   };
- 
-   return (
+
+  return (
     <div className="login-container">
       <form className="login-form" onSubmit={handleSubmit}>
         <h1>Registrar</h1>
-        <span className='created-user'>{created}</span>
+        <span className="created-user">{created}</span>
         <div className="name-container">
           <input
             type="text"
