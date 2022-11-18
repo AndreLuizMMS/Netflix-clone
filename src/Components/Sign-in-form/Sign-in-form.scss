@@ -1,0 +1,19 @@
+ .name-container {
+  display: flex;
+  gap: 1rem;
+
+    & input {
+      width: 30%;
+   }
+ }
+
+ .error-p {
+  color:red;
+  font-style: italic;
+ }
+
+ .created-user {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+ }

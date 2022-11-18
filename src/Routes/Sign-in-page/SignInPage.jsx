@@ -1,9 +1,9 @@
-import LoginForm from '../../Components/Login-form/LoginForm';
-
 import Logo from '../../assets/Netflix-logo.png';
-import './Login-page.scss';
+import SignInForm from '../../Components/Sign-in-form/SignInForm';
 
-const LoginPage = () => {
+import './sign-in-page.scss';
+
+const SignInPage = () => {
   return (
     <div className="bg-img">
       <div className="bg-img-layer">
@@ -11,10 +11,10 @@ const LoginPage = () => {
           <div className="logo">
             <img src={Logo} alt="Netflix Logo" />
           </div>
-          <LoginForm />
+          <SignInForm />
         </div>
       </div>
     </div>
   );
 };
-export default LoginPage;
+export default SignInPage;

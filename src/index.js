@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { store } from './Redux/store';
 import { BrowserRouter } from 'react-router-dom';
+import {UserContext} from './Context/UserContext';
 
 import App from './app/App';
 import reportWebVitals from './reportWebVitals';
@@ -13,9 +14,11 @@ const root = createRoot(container);
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <Provider store={store}>
-        <App />
-      </Provider>
+      <UserContext.Provider >
+        <Provider store={store}>
+          <App />
+        </Provider>
+      </UserContext.Provider>
     </BrowserRouter>
   </React.StrictMode>
 );
