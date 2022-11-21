@@ -1,6 +1,10 @@
 import { useState, useContext } from 'react';
 import { Navigate, Link } from 'react-router-dom';
-import { auth, loginExistentUser } from '../../Firebase/firebase';
+import {
+  auth,
+  loginExistentUser,
+  getUserFromDB
+} from '../../Firebase/firebase';
 
 import { UserContext } from '../../Context/UserContext';
 
@@ -14,6 +18,8 @@ const LoginForm = () => {
   const [formField, setForm] = useState(defaultFormField);
   const { email, password } = formField;
 
+  const [error, setError] = useState('');
+
   const { setCurrentUser } = useContext(UserContext);
 
   const handlesubmit = async e => {
@@ -22,9 +28,13 @@ const LoginForm = () => {
 
     try {
       const { user } = await loginExistentUser(email, password);
-      setCurrentUser(user); 
+      const userData = await getUserFromDB(user);
+      setCurrentUser(userData);
     } catch (err) {
-      console.log(err, 'caiu no catch');
+      console.log(err.code);
+      if (err.code == 'auth/user-not-found') {
+        setError('Crie uma conta !');
+      }
     }
   };
   const handleChange = e => {
@@ -39,12 +49,14 @@ const LoginForm = () => {
       <>
         <form onSubmit={handlesubmit} className="login-form">
           <h1>Entrar</h1>
+          <h3 className='h3-error'>{error}</h3>
           <input
             type="email"
             name="email"
             placeholder="Email"
             value={email}
             onChange={handleChange}
+            required
           />
           <input
             type="password"
@@ -52,6 +64,7 @@ const LoginForm = () => {
             placeholder="senha"
             value={password}
             onChange={handleChange}
+            required
           />
           <button className="login-btn">Entrar</button>
           <p>

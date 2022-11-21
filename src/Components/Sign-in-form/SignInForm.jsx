@@ -3,13 +3,16 @@ import { Link } from 'react-router-dom';
 
 import { UserContext } from '../../Context/UserContext';
 
-import { createUser } from '../../Firebase/firebase';
+import {
+  createUser,
+  createUserDocFromAuth,
+  getUserFromDB
+} from '../../Firebase/firebase';
 
 import './Sign-in-form.scss';
 
 const defaultFormFields = {
   name: '',
-  lastName: '',
   email: '',
   password: '',
   confirmPassword: ''
@@ -17,7 +20,7 @@ const defaultFormFields = {
 
 const SignInForm = () => {
   const [formFileds, setFormFields] = useState(defaultFormFields);
-  const { name, lastName, email, password, confirmPassword } = formFileds;
+  const { name, email, password, confirmPassword } = formFileds;
 
   const [error, setError] = useState('');
   const [created, setCreated] = useState('');
@@ -38,13 +41,19 @@ const SignInForm = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     const { email, password, confirmPassword } = formFileds;
+    if (password.length < 6) {
+      setError('a senha deve ter no mínimo 6 caracteres');
+    }
     if (password !== confirmPassword) {
       setError('as senhas nao são compatíveis');
       return;
     }
+
     try {
       const { user } = await createUser(email, password);
-      setCurrentUser(user);
+      await createUserDocFromAuth(user, name);
+      const userData = await getUserFromDB(user);
+      setCurrentUser(userData);
       setError('');
       clearForm();
       setCreated('Usuário criado com sucesso !');
@@ -57,29 +66,22 @@ const SignInForm = () => {
     <div className="login-container">
       <form className="login-form" onSubmit={handleSubmit}>
         <h1>Registrar</h1>
-        <span className="created-user">{created}</span>
-        <div className="name-container">
-          <input
-            type="text"
-            name="name"
-            placeholder="Nome"
-            value={name}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            name="lastName"
-            placeholder="Sobrenome"
-            value={lastName}
-            onChange={handleChange}
-          />
-        </div>
+        <h2 className="created-user">{created}</h2>
+        <input
+          type="text"
+          name="name"
+          placeholder="Nome"
+          value={name}
+          onChange={handleChange}
+          required
+        />
         <input
           type="email"
           name="email"
           placeholder="Email"
           value={email}
           onChange={handleChange}
+          required
         />
         <span className="error-p">{error}</span>
         <input
@@ -88,6 +90,7 @@ const SignInForm = () => {
           placeholder="senha"
           value={password}
           onChange={handleChange}
+          required
         />
         <input
           type="password"
@@ -95,6 +98,7 @@ const SignInForm = () => {
           placeholder="Confirmar senha"
           value={confirmPassword}
           onChange={handleChange}
+          required
         />
         <button className="login-btn">Entrar</button>
         <p>

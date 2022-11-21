@@ -5,7 +5,7 @@ import {
   signInWithEmailAndPassword
 } from 'firebase/auth';
 
-import {} from 'firebase/firestore' 
+import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCKLPgXo1IDFbMy8KOroRG-ERGQ8emC6yw',
@@ -26,4 +26,36 @@ export const createUser = async (email, password) => {
 export const loginExistentUser = async (email, password) => {
   if (!password || !email) return; // se nao tiver nenhum, break
   return await signInWithEmailAndPassword(auth, email, password);
+};
+
+export const db = getFirestore();
+
+export const createUserDocFromAuth = async (userAuth, name) => {
+  if (!userAuth) return; // se nao tiver nenhum
+  const userDoc = doc(db, 'users', userAuth.uid);
+
+  const UserSnapshot = await getDoc(userDoc);
+
+  if (!UserSnapshot.exists()) {
+    const { email } = userAuth;
+    const createdAt = new Date();
+
+    try {
+      await setDoc(userDoc, {
+        email,
+        name,
+        createdAt
+      });
+      console.log('criou');
+    } catch (err) {
+      console.log(err);
+    }
+  }
+};
+
+export const getUserFromDB = async user => {
+  const userDoc = doc(db, 'users', user.uid);
+  const userDocRef = await getDoc(userDoc);
+  // console.log(userDocRef.data());
+  return userDocRef.data();
 };
